@@ -23,5 +23,5 @@ This project aims to model the basic functionality of a crude database system.
 - Allows the edit of records
 
 ## Read the full report:
-For more technical information regarding the project, refer to the included report.
+For more technical information regarding the project, refer to the included report - Project_Report.pdf
 
