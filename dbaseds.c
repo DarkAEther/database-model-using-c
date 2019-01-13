@@ -84,20 +84,18 @@ int main(){
 				int dbnum = -1;
 				char value[100];
 				int index;
-				if(dbases == 0) printf("No databases present\n"); break;
+				if(dbases == 0) {printf("No databases present\n"); break;}
+				print_dbases(dbase,dbases);
 				printf("Enter the index number of the database you want and press Enter\n");
 				
 				scanf("%d",&dbnum);
 				printf("\nColumns:\n");
-				// for(int o = 0; o < dbase[dbnum]->field_count;o++){
-				// 	printf("%d|-->%s\n",o,dbase[dbnum]->headers[o]);
-				// }
 				print_all_columns_selection_form(dbase,dbnum);
 
 				printf("Enter (column_index search_value) of choice:\n");
 				scanf("%d",&index);scanf("%s",value);
 
-				//TODO n hash tables..you are insane..eyy im done
+				
 				int desc = dbase[dbnum]->discriminator[index];
 				int hash;
 				int rogue = 0;
@@ -108,7 +106,7 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].integer != atoi(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 						
 					}break;
@@ -117,7 +115,7 @@ int main(){
 						hash = hashorig;
 						while (strcmp(dbase[dbnum]->start[index][hash]->fields[index].string,value) !=0 && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 					}break;
 					case 3:{//double
@@ -126,12 +124,13 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].dbl != atof(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						}
 					}break;
 				}
 				if (rogue == 0){
 					printf("Record Found\n");
+					print_all_columns_header_form(dbase,dbnum);
 					for (int g = 0; g < dbase[dbnum]->field_count;g++){
 						if (dbase[dbnum]->discriminator[g] == 1) printf("%d\t",dbase[dbnum]->start[index][hash]->fields[g].integer);
 						else if (dbase[dbnum]->discriminator[g] == 2) printf("%s\t",dbase[dbnum]->start[index][hash]->fields[g].string);
@@ -168,15 +167,15 @@ int main(){
 					int field_type = dbase[dbnum]->discriminator[k];
 					switch (field_type){
 						case 1:{ // integer
-							printf("Integer %d\n",hash_int(dbase[dbnum]->start[k],newrec->fields[k].integer));
+							//printf("Integer %d\n",hash_int(dbase[dbnum]->start[k],newrec->fields[k].integer));
 							dbase[dbnum]->start[k][hash_int(dbase[dbnum]->start[k],newrec->fields[k].integer)] = newrec;
 						}break;
 						case 2:{ // string
-							printf("String %d\n",hash_string(dbase[dbnum]->start[k],newrec->fields[k].string));
+							//printf("String %d\n",hash_string(dbase[dbnum]->start[k],newrec->fields[k].string));
 							dbase[dbnum]->start[k][hash_string(dbase[dbnum]->start[k],newrec->fields[k].string)] = newrec;
 						}break;
 						case 3:{ // double
-							printf("Double %d\n",hash_double(dbase[dbnum]->start[k],newrec->fields[k].dbl));
+							//printf("Double %d\n",hash_double(dbase[dbnum]->start[k],newrec->fields[k].dbl));
 							dbase[dbnum]->start[k][hash_double(dbase[dbnum]->start[k],newrec->fields[k].dbl)] = newrec;
 						}break;
 					}
@@ -213,7 +212,7 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].integer != atoi(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 						
 					}break;
@@ -222,7 +221,7 @@ int main(){
 						hash = hashorig;
 						while (strcmp(dbase[dbnum]->start[index][hash]->fields[index].string,value) !=0 && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 					}break;
 					case 3:{//double
@@ -231,7 +230,7 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].dbl != atof(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig){ printf("Not Found\n");rogue=1;}
 						}
 					}break;
 				}
@@ -245,6 +244,7 @@ int main(){
 					printf("\n");
 					free(dbase[dbnum]->start[index][hash]);
 					dbase[dbnum]->start[index][hash] = NULL;
+					dbase[dbnum]->number_of_records--;
 					printf("Record Deleted\n");
 				}
 
@@ -276,10 +276,11 @@ int main(){
 				return 0;
 			}break;
 			case 5:{
-					int dbnum = -1;
+				int dbnum = -1;
 				char value[100];
 				int index;
-				if(dbases == 0) printf("No databases present\n"); break;
+				if(dbases == 0){printf("No databases present\n"); break;}
+				print_dbases(dbase,dbases);
 				printf("Enter the index number of the database you want and press Enter\n");
 				
 				scanf("%d",&dbnum);
@@ -292,6 +293,7 @@ int main(){
 				
 				int desc = dbase[dbnum]->discriminator[index];
 				int hash;
+				char* sval;
 				int rogue = 0;
 				switch (desc){
 					case 1:{
@@ -300,7 +302,7 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].integer != atoi(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 						
 					}break;
@@ -309,7 +311,7 @@ int main(){
 						hash = hashorig;
 						while (strcmp(dbase[dbnum]->start[index][hash]->fields[index].string,value) !=0 && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						} 
 					}break;
 					case 3:{//double
@@ -318,20 +320,53 @@ int main(){
 						hash = hashorig;
 						while (dbase[dbnum]->start[index][hash]->fields[index].dbl != atof(value) && !rogue){
 							hash = (hash+1)%HASHCONST;
-							if (hash==hashorig) printf("Not Found\n");rogue=1;
+							if (hash==hashorig) {printf("Not Found\n");rogue=1;}
 						}
 					}break;
 				}
 				if (rogue == 0){
-					printf("Record Found\n");
+					printf("Record Found\n");printf("Re-enter the record\n");
+					print_all_columns_header_form(dbase,dbnum);
 					for (int g = 0; g < dbase[dbnum]->field_count;g++){
 						if (dbase[dbnum]->discriminator[g] == 1) printf("%d\t",dbase[dbnum]->start[index][hash]->fields[g].integer);
 						else if (dbase[dbnum]->discriminator[g] == 2) printf("%s\t",dbase[dbnum]->start[index][hash]->fields[g].string);
 						else if (dbase[dbnum]->discriminator[g] == 3) printf("%le\t",dbase[dbnum]->start[index][hash]->fields[g].dbl);
 					}
 					printf("\n");
+
+					for (int k = 0; k<dbase[dbnum]->field_count;k++){
+					//printf("%d\t",dbase[dbnum]->discriminator[k]);
+					if (dbase[dbnum]->discriminator[k] == 1) scanf("%d",&(dbase[dbnum]->start[index][hash]->fields[k].integer));
+					else if (dbase[dbnum]->discriminator[k] == 2){
+						sval = (char*)malloc(sizeof(char)*50);
+						scanf("%s",sval);
+						dbase[dbnum]->start[index][hash]->fields[k].string= sval;
+					} else if (dbase[dbnum]->discriminator[k] == 3) scanf("%le",&(dbase[dbnum]->start[index][hash]->fields[k].dbl));
+					}
+					struct record* newrec = dbase[dbnum]->start[index][hash];
+					for (int k = 0; k<dbase[dbnum]->field_count;k++){ // multi hash
+						int field_type = dbase[dbnum]->discriminator[k];
+						switch (field_type){
+							case 1:{ // integer
+								//printf("Integer %d\n",hash_int(dbase[dbnum]->start[k],newrec->fields[k].integer));
+								dbase[dbnum]->start[k][hash] = NULL;
+								dbase[dbnum]->start[k][hash_int(dbase[dbnum]->start[k],newrec->fields[k].integer)] = newrec;
+							}break;
+							case 2:{ // string
+								//printf("String %d\n",hash_string(dbase[dbnum]->start[k],newrec->fields[k].string));
+								dbase[dbnum]->start[k][hash] = NULL;
+								dbase[dbnum]->start[k][hash_string(dbase[dbnum]->start[k],newrec->fields[k].string)] = newrec;
+							}break;
+							case 3:{ // double
+								//printf("Double %d\n",hash_double(dbase[dbnum]->start[k],newrec->fields[k].dbl));
+								dbase[dbnum]->start[k][hash] = NULL;
+								dbase[dbnum]->start[k][hash_double(dbase[dbnum]->start[k],newrec->fields[k].dbl)] = newrec;
+							}break;
+						}
+						
+					}
+					printf("Record successfully editted\n");
 				}
-					
 			}
 		}
 	}
